@@ -2,6 +2,7 @@ const btnteme = document.getElementById("theme-switcher");
 const bodytag = document.querySelector("body");
 const addbtn = document.getElementById("add-btn");
 const todoinput = document.getElementById("addt");
+const ul = document.getElementById("todos");
 const main = () => {
   btnteme.addEventListener("click", () => {
     bodytag.classList.toggle("light");
@@ -15,6 +16,26 @@ const main = () => {
   });
 
   makeTodoElement(JSON.parse(localStorage.getItem("todos")));
+
+  ul.addEventListener("dragover", (e) => {
+    if (
+      e.target.classList.contains("card") &&
+      !e.target.classList.contains("dragging")
+    ) {
+      const draggingcard = document.querySelector(".dragging");
+      const cards = [...ul.querySelectorAll(".card")];
+      const currentPos = cards.indexOf(draggingcard);
+      const newPos = cards.indexOf(e.target);
+      if (currentPos > newPos) {
+        ul.insertBefore(draggingcard, e.target);
+      } else {
+        ul.insertBefore(e.target, draggingcard);
+      }
+      const todos = JSON.parse(localStorage.getItem("todos"));
+      const removed = todos.splice(currentPos, 1);
+      todos.splice(newPos, 0, removed);
+    }
+  });
 
   addbtn.addEventListener("click", () => {
     const item = todoinput.value.trim();
@@ -58,6 +79,12 @@ const makeTodoElement = (todoArray) => {
     itemp.textContent = todoObject.item;
 
     //Add Events
+    card.addEventListener("dragstart", () => {
+      card.classList.add("dragging");
+    });
+    card.addEventListener("dragend", () => {
+      card.classList.remove("dragging");
+    });
 
     //Set Elements by Parent Child
     clearbtn.appendChild(img);
