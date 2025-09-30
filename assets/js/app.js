@@ -3,16 +3,30 @@ const bodytag = document.querySelector("body");
 const addbtn = document.getElementById("add-btn");
 const todoinput = document.getElementById("addt");
 const ul = document.getElementById("todos");
+const temeimg = btnteme.children[0];
+let temel = "";
+if (localStorage.getItem("teme") === "Light") {
+  temeimg.setAttribute("src", "./assets/images/icon-moon.svg");
+  bodytag.classList.add("light");
+} else {
+  temeimg.setAttribute("src", "./assets/images/icon-sun.svg");
+  bodytag.classList.remove("light");
+}
 const main = () => {
   btnteme.addEventListener("click", () => {
     bodytag.classList.toggle("light");
-    const temeimg = btnteme.children[0];
-    temeimg.setAttribute(
-      "src",
-      temeimg.getAttribute("src") === "./assets/images/icon-moon.svg"
-        ? "./assets/images/icon-sun.svg"
-        : "./assets/images/icon-moon.svg"
-    );
+    if (bodytag.classList.contains("light")) {
+      temel = "Light";
+      localStorage.setItem("teme", temel);
+    } else {
+      temel = "Dark";
+      localStorage.setItem("teme", temel);
+    }
+    if (localStorage.getItem("teme") === "Light") {
+      temeimg.setAttribute("src", "./assets/images/icon-moon.svg");
+    } else {
+      temeimg.setAttribute("src", "./assets/images/icon-sun.svg");
+    }
   });
 
   makeTodoElement(JSON.parse(localStorage.getItem("todos")));
@@ -33,7 +47,8 @@ const main = () => {
       }
       const todos = JSON.parse(localStorage.getItem("todos"));
       const removed = todos.splice(currentPos, 1);
-      todos.splice(newPos, 0, removed);
+      todos.splice(newPos, 0, removed[0]);
+      localStorage.setItem("todos", JSON.stringify(todos));
     }
   });
 
@@ -97,5 +112,4 @@ const makeTodoElement = (todoArray) => {
     document.getElementById("todos").appendChild(card);
   });
 };
-
 document.addEventListener("DOMContentLoaded", main);

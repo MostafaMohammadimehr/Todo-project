@@ -380,6 +380,11 @@ footer {
         font-size: calc(var(--base-font) * 1.5);
     }
 }
-.todos .card.dragging{
+
+.todos .card.dragging {
     opacity: 0.5;
+}
+
+#hover:hover {
+    cursor: pointer;
 }
